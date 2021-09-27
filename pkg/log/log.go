@@ -1,0 +1,3 @@
+// log.go
+
+package log
