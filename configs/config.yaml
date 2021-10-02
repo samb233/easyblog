@@ -4,3 +4,5 @@ data:
   database:
     driver: mysql
     source: root:password@tcp(127.0.0.1:23306)/easyblog?parseTime=True
+log:
+  logLevel: debug

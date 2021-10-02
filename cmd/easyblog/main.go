@@ -8,15 +8,17 @@ import (
 	"net/http"
 
 	"github.com/samb233/easyblog/internal/conf"
-	"github.com/samb233/easyblog/internal/data"
+	"github.com/samb233/easyblog/internal/repo"
 	"github.com/samb233/easyblog/internal/server"
 	"github.com/samb233/easyblog/internal/service"
 	"github.com/samb233/easyblog/internal/usecase"
+	"github.com/samb233/easyblog/pkg/config"
 )
 
 func main() {
-	conf := readConf()
-	srv, cleanUp, err := initApp(&conf.Data.Database, &conf.Server)
+	cfg := &conf.Bootstrap{}
+	config.Load("configs/config.yaml", "yaml", cfg)
+	srv, cleanUp, err := initApp(cfg.Repo, cfg.Server)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,14 +31,14 @@ func main() {
 
 // TODO: 最好还是有个logger吧？
 // TODO: 使用wire框架自动化生成依赖
-func initApp(confDatabase *conf.Database, confServer *conf.Server) (*http.Server, func(), error) {
-	database, cleanUp, err := data.NewData(confDatabase)
+func initApp(confDatabase *conf.Repo, confServer *conf.Server) (*http.Server, func(), error) {
+	database, cleanUp, err := repo.NewData(confDatabase)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	indexRepo := data.NewIndexRepo(database)
-	contentRepo := data.NewContentRepo(database)
+	indexRepo := repo.NewIndexRepo(database)
+	contentRepo := repo.NewContentRepo(database)
 	indexUsecase := usecase.NewIndexUsecase(indexRepo)
 	contentUsecase := usecase.NewContentUsecase(contentRepo)
 	blogService := service.NewBlogService(indexUsecase, contentUsecase)
