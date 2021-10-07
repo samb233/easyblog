@@ -7,15 +7,21 @@ import (
 	"context"
 
 	"github.com/samb233/easyblog/internal/domain"
+	"github.com/samb233/easyblog/pkg/log"
 )
 
 type ContentRepo struct {
 	repo *Repo
+	log  log.Logger
 }
 
-func NewContentRepo(repo *Repo) *ContentRepo {
+func NewContentRepo(repo *Repo, logger log.Logger) *ContentRepo {
+	log := log.WithFields(logger, log.Fields{
+		"file": "repo/content.go",
+	})
 	return &ContentRepo{
 		repo: repo,
+		log:  log,
 	}
 }
 

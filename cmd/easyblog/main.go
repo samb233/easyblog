@@ -53,12 +53,10 @@ func initApp(confDatabase *conf.Repo, confServer *conf.Server, logger log.Logger
 		return nil, nil, err
 	}
 
-	indexRepo := repo.NewIndexRepo(database)
-	contentRepo := repo.NewContentRepo(database)
-
+	indexRepo := repo.NewIndexRepo(database, logger)
+	contentRepo := repo.NewContentRepo(database, logger)
 	indexUsecase := usecase.NewIndexUsecase(indexRepo)
 	contentUsecase := usecase.NewContentUsecase(contentRepo)
-
 	blogService := service.NewBlogService(indexUsecase, contentUsecase)
 
 	srv := server.NewHTTPServer(confServer, blogService)

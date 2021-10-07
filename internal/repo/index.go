@@ -9,21 +9,25 @@ import (
 
 	"github.com/samb233/easyblog/internal/domain"
 	"github.com/samb233/easyblog/internal/repo/ent/index"
+	"github.com/samb233/easyblog/pkg/log"
 )
 
 type IndexRepo struct {
 	repo *Repo
+	log  log.Logger
 }
 
-func NewIndexRepo(repo *Repo) *IndexRepo {
+func NewIndexRepo(repo *Repo, logger log.Logger) *IndexRepo {
+	log := log.WithFields(logger, log.Fields{
+		"file": "repo/index.go",
+	})
 	return &IndexRepo{
 		repo: repo,
+		log:  log,
 	}
 }
 
 var _ domain.IndexRepo = (*IndexRepo)(nil)
-
-// db
 
 func (ir *IndexRepo) ListIndex(ctx context.Context) ([]*domain.Index, error) {
 	// TODO: 分页、排序
