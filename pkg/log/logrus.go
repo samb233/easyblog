@@ -5,7 +5,6 @@ package log
 
 import (
 	"io"
-	"os"
 
 	"github.com/sirupsen/logrus"
 )
@@ -18,7 +17,7 @@ type logger struct {
 
 func NewLogger(w io.Writer, options ...Options) Logger {
 	l := logrus.New()
-	l.Out = os.Stdout
+	l.Out = w
 	l.Level = logrus.InfoLevel
 	l.Formatter = &logrus.TextFormatter{}
 
@@ -32,7 +31,7 @@ func NewLogger(w io.Writer, options ...Options) Logger {
 	}
 }
 
-// 实现Fields
+// logrus Fields
 type Fields map[string]interface{}
 
 func WithFields(l Logger, fields Fields) Logger {
@@ -45,24 +44,26 @@ func WithFields(l Logger, fields Fields) Logger {
 	return l2.e.WithFields(f)
 }
 
-// logrus配置设置
+// logrus options
 type Options func(*logrus.Logger)
 
-// 日志等级设置
+// log level option
+// TODO: logrus提供了Fatal等level
+// 但我的接口是不提供的
+// 虽说自己用不会雍错，但这里需不需要做点操作来避免？
 func LogLevel(lvl logrus.Level) Options {
 	return func(l *logrus.Logger) {
 		l.Level = lvl
 	}
 }
 
-// 输出格式配置
+// logrus formatter option
 func LogFormat(formatter logrus.Formatter) Options {
 	return func(l *logrus.Logger) {
 		l.Formatter = formatter
 	}
 }
 
-// 实现Logger接口
 func (l *logger) Debug(arg ...interface{}) {
 	l.e.Debug(arg...)
 }

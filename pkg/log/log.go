@@ -1,6 +1,5 @@
 // log.go
-// 提供Logger接口供应用调用
-// 为实现类提供Log等级定义
+// define log interface
 
 package log
 
