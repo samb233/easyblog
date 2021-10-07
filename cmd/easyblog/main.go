@@ -16,11 +16,13 @@ import (
 )
 
 func main() {
-	cfg := &conf.Bootstrap{}
-	config.Load("configs/config.yaml", "yaml", cfg)
+	cfg, err := readConf()
+	if err != nil {
+		panic(err)
+	}
 	srv, cleanUp, err := initApp(cfg.Repo, cfg.Server)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	defer cleanUp()
@@ -48,7 +50,8 @@ func initApp(confDatabase *conf.Repo, confServer *conf.Server) (*http.Server, fu
 	return srv, cleanUp, nil
 }
 
-// TODO: 完善读取
-func readConf() *conf.Bootstrap {
-	return &conf.Bootstrap{}
+func readConf() (*conf.Bootstrap, error) {
+	cfg := &conf.Bootstrap{}
+	err := config.LoadFromFile("configs/config.yaml", config.Yaml, cfg)
+	return cfg, err
 }

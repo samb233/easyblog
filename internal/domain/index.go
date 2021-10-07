@@ -1,5 +1,5 @@
 // index.go
-// 文章目录index的领域模型定义
+// Define index domain
 
 package domain
 
@@ -21,7 +21,6 @@ type Index struct {
 }
 
 // Index Repository
-// Index 持久化层接口定义
 type IndexRepo interface {
 	// db
 	ListIndex(ctx context.Context) ([]*Index, error)
@@ -33,7 +32,6 @@ type IndexRepo interface {
 }
 
 // Index Usecase
-// Index 业务逻辑层接口定义
 type IndexUsecase interface {
 	List(ctx context.Context) ([]*Index, error)
 	Create(ctx context.Context, index *Index) error

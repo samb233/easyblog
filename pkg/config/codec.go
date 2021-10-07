@@ -1,10 +1,10 @@
-// yaml.go
-// 提供yaml文件的DecodeFunc方法
+// codec.go
 
 package config
 
 import "gopkg.in/yaml.v3"
 
+// yaml
 func decodeYaml(data []byte, v interface{}) error {
 	return yaml.Unmarshal(data, v)
 }

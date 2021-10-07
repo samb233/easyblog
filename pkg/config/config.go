@@ -1,35 +1,61 @@
 // config.go
-// 1. 打开配置文件
-// 2. 调用codec将配置输入Config结构体
-
-// TODO: 能不能把decodeMap优化一下？
-// TODO: 大的开源项目用proto是怎麼做的？
-// TODO: 配置文件的validate怎么做？放在哪里做？
 
 package config
 
-import "io/ioutil"
+import (
+	"fmt"
+	"io/ioutil"
+)
 
-// type: 配置文件的格式
+// codec type of config file. yaml etc.
 type Type string
 
-// DecodeFunc: 解析相应格式的配置文件到v中
-// v: 空的map[string]interface{}
+// supported codec types
+const (
+	Yaml Type = "yaml"
+)
+
+// decode func defination
+// TODO: 这种直接将配置解码到config结构体的做法存在问题
+// 例如yaml，当字段名与结构体名不匹配时，会将传递空指针到结构体，并不会报错，在使用时会panic
+// 关键信息缺失时，应该在这里报错而不是在使用时panic
+// 两种思路
+// 设置default，使用时判断nil后赋值
+// 或是default + option func 的模式
 type DecodeFunc func(data []byte, v interface{}) error
 
-// decodeMap提供type与DecodeFunc之间的映射
 var decodeMap map[Type]DecodeFunc
 
+// load all decodeFunc into decodeMap
 func init() {
 	decodeMap = make(map[Type]DecodeFunc)
-	decodeMap["yaml"] = decodeYaml
+	decodeMap[Yaml] = decodeYaml
 }
 
-func Load(path string, codec Type, cfg interface{}) error {
-	data, err := ioutil.ReadFile(path)
+// check whether a decodeFunc exist
+func ExistCodec(codec Type) bool {
+	_, ok := decodeMap[codec]
+	return ok
+}
+
+// load from bytes
+func Load(data []byte, codec Type, cfg interface{}) error {
+	if !ExistCodec(codec) {
+		return fmt.Errorf("codec not supported")
+	}
+	return decodeMap[codec](data, cfg)
+}
+
+// load from file
+func LoadFromFile(filePath string, codec Type, cfg interface{}) error {
+	if !ExistCodec(codec) {
+		return fmt.Errorf("codec not supported")
+	}
+
+	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return err
 	}
 
-	return decodeMap[codec](data, cfg)
+	return Load(data, codec, cfg)
 }

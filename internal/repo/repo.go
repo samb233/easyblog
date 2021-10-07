@@ -1,5 +1,5 @@
-// data.go
-// 提供数据库/Redis连接
+// repo.go
+// connect to database and redis
 
 package repo
 
@@ -17,7 +17,6 @@ type Repo struct {
 }
 
 func NewData(conf *conf.Repo) (*Repo, func(), error) {
-	// TODO: read from config
 	dsn := conf.Database.Source
 	driver := conf.Database.Driver
 
