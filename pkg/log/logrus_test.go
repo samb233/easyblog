@@ -41,3 +41,18 @@ func TestLogger(t *testing.T) {
 		})
 	}
 }
+
+func TestWithFields(t *testing.T) {
+	output := new(bytes.Buffer)
+	logger := NewLogger(output, LogLevel(logrus.InfoLevel), LogFormat(&logrus.JSONFormatter{}))
+	logger = WithFields(logger, Fields{
+		"name": "log",
+		"test": "this is just a test",
+	})
+	message := "this is just a test"
+	want := `{"level":"info","msg":"this is just a test","name":"log","test":"this is just a test"`
+
+	logger.Info(message)
+	assert.True(t, strings.HasPrefix(output.String(), want))
+
+}
