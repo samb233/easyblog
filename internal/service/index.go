@@ -11,8 +11,8 @@ import (
 	"github.com/samb233/easyblog/internal/domain"
 )
 
-// Index DTO
-type Index struct {
+// IndexRequest
+type IndexRequest struct {
 	ContentID int32
 	Title     string
 	Desc      string
@@ -21,14 +21,14 @@ type Index struct {
 	UpdatedAt int64
 }
 
-func (bs *BlogService) CreateIndex(ctx context.Context, index *Index) error {
-	indexDO := &domain.Index{
-		ContentID: index.ContentID,
-		Title:     index.Title,
-		Desc:      index.Desc,
-		Attr:      index.Attr,
+func (bs *BlogService) CreateIndex(ctx context.Context, ireq *IndexRequest) error {
+	index := &domain.Index{
+		ContentID: ireq.ContentID,
+		Title:     ireq.Title,
+		Desc:      ireq.Desc,
+		Attr:      ireq.Attr,
 	}
-	if err := bs.indexUsecase.Create(ctx, indexDO); err != nil {
+	if err := bs.indexUsecase.Create(ctx, index); err != nil {
 		// TODO: 处理error
 		return err
 	}
@@ -37,15 +37,15 @@ func (bs *BlogService) CreateIndex(ctx context.Context, index *Index) error {
 }
 
 // TODO: 分页
-func (bs *BlogService) ListIndex(ctx context.Context) ([]*Index, error) {
+func (bs *BlogService) ListIndex(ctx context.Context) ([]*IndexRequest, error) {
 	ps, err := bs.indexUsecase.List(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	indexes := make([]*Index, 0)
+	indexes := make([]*IndexRequest, 0)
 	for _, p := range ps {
-		indexes = append(indexes, &Index{
+		indexes = append(indexes, &IndexRequest{
 			ContentID: p.ContentID,
 			Title:     p.Title,
 			Desc:      p.Desc,
@@ -56,4 +56,20 @@ func (bs *BlogService) ListIndex(ctx context.Context) ([]*Index, error) {
 	}
 
 	return indexes, nil
+}
+
+// update index
+func (bs *BlogService) UpdateIndex(ctx context.Context, id int32, ireq *IndexRequest) error {
+	index := &domain.Index{
+		Title: ireq.Title,
+		Desc:  ireq.Desc,
+		Attr:  ireq.Attr,
+	}
+
+	return bs.indexUsecase.Update(ctx, id, index)
+}
+
+// delete index
+func (bs *BlogService) DeleteIndex(ctx context.Context, id int32) error {
+	return bs.indexUsecase.Delete(ctx, id)
 }

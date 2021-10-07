@@ -7,6 +7,8 @@ import (
 	"github.com/samb233/easyblog/internal/conf"
 	"github.com/samb233/easyblog/internal/repo/ent"
 	"github.com/samb233/easyblog/pkg/log"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type Repo struct {

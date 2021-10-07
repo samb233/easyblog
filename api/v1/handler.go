@@ -11,9 +11,33 @@ func (h *handler) ListBlog(c *gin.Context) {
 	if err != nil {
 		// do some thing
 		c.JSON(500, gin.H{
-			"error": "error",
+			"error": err,
 		})
 	}
 
 	c.JSON(200, indexes)
+}
+
+func (h *handler) GetBlog(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"test": "this is just a test",
+	})
+}
+
+func (h *handler) CreateBlog(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"test": "this is just a test",
+	})
+}
+
+func (h *handler) UpdateBlog(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"test": "this is just a test",
+	})
+}
+
+func (h *handler) DeleteBlog(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"test": "this is just a test",
+	})
 }
