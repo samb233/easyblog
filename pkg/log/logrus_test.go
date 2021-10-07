@@ -47,12 +47,29 @@ func TestWithFields(t *testing.T) {
 	logger := NewLogger(output, LogLevel(logrus.InfoLevel), LogFormat(&logrus.JSONFormatter{}))
 	logger = WithFields(logger, Fields{
 		"name": "log",
-		"test": "this is just a test",
 	})
 	message := "this is just a test"
-	want := `{"level":"info","msg":"this is just a test","name":"log","test":"this is just a test"`
 
-	logger.Info(message)
-	assert.True(t, strings.HasPrefix(output.String(), want))
+	t.Run("WithFields once", func(t *testing.T) {
+		t.Helper()
+		output.Reset()
+		want := `{"level":"info","msg":"this is just a test","name":"log"`
+
+		logger.Info(message)
+		assert.True(t, strings.HasPrefix(output.String(), want))
+	})
+
+	t.Run("WithFields twice", func(t *testing.T) {
+		t.Helper()
+		output.Reset()
+		loggerTwice := WithFields(logger, Fields{
+			"test": "this is just a test",
+		})
+		want := `{"level":"info","msg":"this is just a test","name":"log","test":"this is just a test"`
+
+		loggerTwice.Info(message)
+		// fmt.Println(output.String())
+		assert.True(t, strings.HasPrefix(output.String(), want))
+	})
 
 }

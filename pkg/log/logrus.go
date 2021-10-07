@@ -35,13 +35,15 @@ func NewLogger(w io.Writer, options ...Options) Logger {
 type Fields map[string]interface{}
 
 func WithFields(l Logger, fields Fields) Logger {
-	f := logrus.Fields(fields)
-	l2, ok := l.(*logger)
+	logger, ok := l.(*logger)
+	// TODO: what can I do hear
 	if !ok {
 		return l
 	}
 
-	return l2.e.WithFields(f)
+	f := logrus.Fields(fields)
+	logger.e = logger.e.WithFields(f)
+	return logger
 }
 
 // logrus options

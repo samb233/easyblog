@@ -4,10 +4,9 @@
 package repo
 
 import (
-	"fmt"
-
 	"github.com/samb233/easyblog/internal/conf"
 	"github.com/samb233/easyblog/internal/repo/ent"
+	"github.com/samb233/easyblog/pkg/log"
 )
 
 type Repo struct {
@@ -16,7 +15,10 @@ type Repo struct {
 	// TODO: redis
 }
 
-func NewData(conf *conf.Repo) (*Repo, func(), error) {
+func NewRepo(conf *conf.Repo, logger log.Logger) (*Repo, func(), error) {
+	log := log.WithFields(logger, log.Fields{
+		"file": "repo/repo.go",
+	})
 	dsn := conf.Database.Source
 	driver := conf.Database.Driver
 
@@ -30,9 +32,9 @@ func NewData(conf *conf.Repo) (*Repo, func(), error) {
 	}
 
 	return database, func() {
-		fmt.Println("close db")
+		log.Info("close database")
 		if err := database.db.Close(); err != nil {
-			fmt.Println("close db error: ", err)
+			log.Errorf("close database error: %v", err)
 		}
 	}, nil
 }

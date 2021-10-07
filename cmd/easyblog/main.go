@@ -4,8 +4,8 @@
 package main
 
 import (
-	"log"
 	"net/http"
+	"os"
 
 	"github.com/samb233/easyblog/internal/conf"
 	"github.com/samb233/easyblog/internal/repo"
@@ -13,36 +13,52 @@ import (
 	"github.com/samb233/easyblog/internal/service"
 	"github.com/samb233/easyblog/internal/usecase"
 	"github.com/samb233/easyblog/pkg/config"
+	"github.com/samb233/easyblog/pkg/log"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
+	// init logger
+	logger := log.NewLogger(os.Stdout, log.LogFormat(&logrus.JSONFormatter{}))
+	log := log.WithFields(logger, log.Fields{
+		"app": "easyblog",
+	})
+
+	// read conf
 	cfg, err := readConf()
 	if err != nil {
-		panic(err)
+		log.Errorf("read conf error : %v", err)
+		return
 	}
-	srv, cleanUp, err := initApp(cfg.Repo, cfg.Server)
+
+	// init app
+	srv, cleanUp, err := initApp(cfg.Repo, cfg.Server, log)
 	if err != nil {
-		panic(err)
+		log.Errorf("initApp error: %v", err)
 	}
 
 	defer cleanUp()
 
-	// TODO： “优雅退出”，这里Fatal的话上面defer就没用了
-	log.Fatal(srv.ListenAndServe())
+	// serve
+	err = srv.ListenAndServe()
+	if err != nil {
+		log.Errorf("server error: %v", err)
+	}
 }
 
-// TODO: 最好还是有个logger吧？
-// TODO: 使用wire框架自动化生成依赖
-func initApp(confDatabase *conf.Repo, confServer *conf.Server) (*http.Server, func(), error) {
-	database, cleanUp, err := repo.NewData(confDatabase)
+// TODO: use wire to generate automatically
+func initApp(confDatabase *conf.Repo, confServer *conf.Server, logger log.Logger) (*http.Server, func(), error) {
+	database, cleanUp, err := repo.NewRepo(confDatabase, logger)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	indexRepo := repo.NewIndexRepo(database)
 	contentRepo := repo.NewContentRepo(database)
+
 	indexUsecase := usecase.NewIndexUsecase(indexRepo)
 	contentUsecase := usecase.NewContentUsecase(contentRepo)
+
 	blogService := service.NewBlogService(indexUsecase, contentUsecase)
 
 	srv := server.NewHTTPServer(confServer, blogService)
