@@ -66,6 +66,6 @@ func initApp(confDatabase *conf.Repo, confServer *conf.Server, logger log.Logger
 
 func readConf() (*conf.Bootstrap, error) {
 	cfg := &conf.Bootstrap{}
-	err := config.LoadFromFile("../../configs/config.yaml", config.Yaml, cfg)
+	err := config.LoadFromFile("configs/config.yaml", config.Yaml, cfg)
 	return cfg, err
 }

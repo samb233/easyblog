@@ -10,7 +10,7 @@ type Bootstrap struct {
 
 type Repo struct {
 	Database *Database
-	// Redis    Redis
+	Redis    Redis
 }
 
 type Server struct {
@@ -20,4 +20,9 @@ type Server struct {
 type Database struct {
 	Driver string
 	Source string
+}
+
+type Redis struct {
+	Addr     string
+	Password string
 }

@@ -12,7 +12,7 @@ type ContentRequest struct {
 	UpdatedAt int64
 }
 
-func (bs *BlogService) Create(ctx context.Context, creq *ContentRequest) (int32, error) {
+func (bs *BlogService) CreateContent(ctx context.Context, creq *ContentRequest) (int32, error) {
 	content := &domain.Content{
 		Content: creq.Content,
 	}
@@ -20,7 +20,7 @@ func (bs *BlogService) Create(ctx context.Context, creq *ContentRequest) (int32,
 	return bs.contentUsecase.Create(ctx, content)
 }
 
-func (bs *BlogService) Update(ctx context.Context, id int32, creq *ContentRequest) error {
+func (bs *BlogService) UpdateContent(ctx context.Context, id int32, creq *ContentRequest) error {
 	content := &domain.Content{
 		Content: creq.Content,
 	}
@@ -28,7 +28,7 @@ func (bs *BlogService) Update(ctx context.Context, id int32, creq *ContentReques
 	return bs.contentUsecase.Update(ctx, id, content)
 }
 
-func (bs *BlogService) Get(ctx context.Context, id int32) (*ContentRequest, error) {
+func (bs *BlogService) GetContent(ctx context.Context, id int32) (*ContentRequest, error) {
 	content, err := bs.contentUsecase.Get(ctx, id)
 	if err != nil {
 		return nil, err
