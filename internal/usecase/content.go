@@ -9,6 +9,8 @@ import (
 	"github.com/samb233/easyblog/internal/domain"
 )
 
+var _ (domain.ContentUsecase) = (*ContentUsecase)(nil)
+
 type ContentUsecase struct {
 	repo domain.ContentRepo
 }

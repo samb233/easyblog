@@ -3,6 +3,8 @@
 // DO到DTO的转换
 // 数据校验、组装，不涉及复杂逻辑
 
+// TODO: 待删除
+
 package service
 
 import (
@@ -38,7 +40,7 @@ func (bs *BlogService) CreateIndex(ctx context.Context, ireq *IndexRequest) erro
 
 // TODO: 分页
 func (bs *BlogService) ListIndex(ctx context.Context) ([]*IndexRequest, error) {
-	ps, err := bs.indexUsecase.List(ctx)
+	ps, err := bs.indexUsecase.List(ctx, 0, 50)
 	if err != nil {
 		return nil, err
 	}

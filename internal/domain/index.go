@@ -23,7 +23,7 @@ type Index struct {
 // Index Repository
 type IndexRepo interface {
 	// db
-	ListIndex(ctx context.Context) ([]*Index, error)
+	ListIndex(ctx context.Context, page, pageSize int) ([]*Index, error)
 	CreateIndex(ctx context.Context, index *Index) error
 	UpdateIndex(ctx context.Context, id int32, index *Index) error
 	DeleteIndex(ctx context.Context, id int32) error
@@ -33,7 +33,7 @@ type IndexRepo interface {
 
 // Index Usecase
 type IndexUsecase interface {
-	List(ctx context.Context) ([]*Index, error)
+	List(ctx context.Context, page, pageSize int) ([]*Index, error)
 	Create(ctx context.Context, index *Index) error
 	Update(ctx context.Context, id int32, index *Index) error
 	Delete(ctx context.Context, id int32) error

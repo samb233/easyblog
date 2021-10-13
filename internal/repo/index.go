@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/samb233/easyblog/internal/domain"
+	"github.com/samb233/easyblog/internal/repo/ent"
 	"github.com/samb233/easyblog/internal/repo/ent/index"
 	"github.com/samb233/easyblog/pkg/log"
 )
@@ -29,12 +30,13 @@ func NewIndexRepo(repo *Repo, logger log.Logger) *IndexRepo {
 
 var _ domain.IndexRepo = (*IndexRepo)(nil)
 
-func (ir *IndexRepo) ListIndex(ctx context.Context) ([]*domain.Index, error) {
-	// TODO: 分页、排序
-
+func (ir *IndexRepo) ListIndex(ctx context.Context, page, pageSize int) ([]*domain.Index, error) {
 	ps, err := ir.repo.db.Index.
 		Query().
+		Limit(page).
+		Offset(pageSize * (page - 1)).
 		Where(index.State(1)).
+		Order(ent.Desc("id")).
 		All(ctx)
 	if err != nil {
 		return nil, err

@@ -20,11 +20,11 @@ func RegisterGinServer(srv *http.Server, service *service.BlogService) {
 
 	apiv1 := engine.Group("api/v1")
 	{
-		apiv1.GET("/article", handler.ListBlog)
-		apiv1.GET("/article/:id", handler.GetBlog)
-		apiv1.POST("/article", handler.CreateBlog)
-		apiv1.POST("/article/:id", handler.UpdateBlog)
-		apiv1.DELETE("/article/:id", handler.DeleteBlog)
+		apiv1.GET("/articles", handler.ListBlog)
+		apiv1.GET("/articles/:id", handler.GetBlog)
+		apiv1.POST("/articles", handler.CreateBlog)
+		apiv1.POST("/articles/:id", handler.UpdateBlog)
+		apiv1.DELETE("/articles/:id", handler.DeleteBlog)
 	}
 	srv.Handler = engine
 }

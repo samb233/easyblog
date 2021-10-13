@@ -1,7 +1,5 @@
 // index.go
-// Index 业务逻辑层实现
 // 调用repo进行数据持久化
-// 吞掉repo层传入的error
 
 package usecase
 
@@ -11,6 +9,8 @@ import (
 	"github.com/samb233/easyblog/internal/domain"
 )
 
+var _ (domain.IndexUsecase) = (*IndexUsecase)(nil)
+
 type IndexUsecase struct {
 	repo domain.IndexRepo
 }
@@ -19,11 +19,11 @@ func NewIndexUsecase(repo domain.IndexRepo) *IndexUsecase {
 	return &IndexUsecase{repo: repo}
 }
 
-func (uc *IndexUsecase) List(ctx context.Context) ([]*domain.Index, error) {
+func (uc *IndexUsecase) List(ctx context.Context, page, pageSize int) ([]*domain.Index, error) {
 	// TODO: redis
 
 	// db
-	return uc.repo.ListIndex(ctx)
+	return uc.repo.ListIndex(ctx, page, pageSize)
 }
 
 func (uc *IndexUsecase) Create(ctx context.Context, index *domain.Index) error {

@@ -1,13 +1,23 @@
 package v1
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
 // TODO: 写完业务逻辑
+// ListBlog的页码功能
 
 func (h *handler) ListBlog(c *gin.Context) {
-	indexes, err := h.blogService.ListIndex(c.Request.Context())
+	// 获取页码
+	pageQuery := c.DefaultQuery("pages", "1")
+	page, err := strconv.Atoi(pageQuery)
+	if err != nil {
+		page = 1
+	}
+
+	indexes, err := h.blogService.ListBlog(c.Request.Context(), page)
 	if err != nil {
 		// do some thing
 		c.JSON(500, gin.H{

@@ -32,7 +32,7 @@ func main() {
 	}
 
 	// init app
-	srv, cleanUp, err := initApp(cfg.Repo, cfg.Server, log)
+	srv, cleanUp, err := initApp(cfg.Repo, cfg.Server, cfg.Service, log)
 	if err != nil {
 		log.Errorf("initApp error: %v", err)
 	}
@@ -47,7 +47,7 @@ func main() {
 }
 
 // TODO: use wire to generate automatically
-func initApp(confDatabase *conf.Repo, confServer *conf.Server, logger log.Logger) (*http.Server, func(), error) {
+func initApp(confDatabase *conf.Repo, confServer *conf.Server, confService *conf.Service, logger log.Logger) (*http.Server, func(), error) {
 	database, cleanUp, err := repo.NewRepo(confDatabase, logger)
 	if err != nil {
 		return nil, nil, err
@@ -57,7 +57,7 @@ func initApp(confDatabase *conf.Repo, confServer *conf.Server, logger log.Logger
 	contentRepo := repo.NewContentRepo(database, logger)
 	indexUsecase := usecase.NewIndexUsecase(indexRepo)
 	contentUsecase := usecase.NewContentUsecase(contentRepo)
-	blogService := service.NewBlogService(indexUsecase, contentUsecase)
+	blogService := service.NewBlogService(confService, logger, indexUsecase, contentUsecase)
 
 	srv := server.NewHTTPServer(confServer, blogService)
 
