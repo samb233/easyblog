@@ -4,6 +4,8 @@
 package repo
 
 import (
+	"context"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/samb233/easyblog/internal/conf"
 	"github.com/samb233/easyblog/internal/repo/ent"
@@ -28,6 +30,11 @@ func NewRepo(conf *conf.Repo, logger log.Logger) (*Repo, func(), error) {
 
 	db, err := ent.Open(driver, dsn)
 	if err != nil {
+		return nil, nil, err
+	}
+
+	// run auto migration tool
+	if err := db.Schema.Create(context.Background()); err != nil {
 		return nil, nil, err
 	}
 

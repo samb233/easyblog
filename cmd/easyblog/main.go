@@ -47,8 +47,8 @@ func main() {
 }
 
 // TODO: use wire to generate automatically
-func initApp(confDatabase *conf.Repo, confServer *conf.Server, confService *conf.Service, logger log.Logger) (*http.Server, func(), error) {
-	database, cleanUp, err := repo.NewRepo(confDatabase, logger)
+func initApp(confRepo *conf.Repo, confServer *conf.Server, confService *conf.Service, logger log.Logger) (*http.Server, func(), error) {
+	database, cleanUp, err := repo.NewRepo(confRepo, logger)
 	if err != nil {
 		return nil, nil, err
 	}
