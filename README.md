@@ -1,6 +1,6 @@
 # easyblog
 
-普通的，并不是很好用的博客项目，主要用于实践类似于clean-arch和ddd的项目结构。使用`gin`作为`http`框架，`ent`为`orm`框架。数据库使用`mysql`。
+普通的，并不是很好用的博客项目，主要用于实践类似于clean-arch和ddd的项目结构。使用`gin`作为`http`框架实现`RESTful API`，使用`ent`作为`orm`框架。数据库使用`mysql`。
 
 如果你正在寻找一个好用的博客网站，我推荐使用[Hugo](https://github.com/gohugoio/hugo)。
 
