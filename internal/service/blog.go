@@ -103,3 +103,13 @@ func (bs *BlogService) UpdateBlog(ctx context.Context, id int, blog *Blog) error
 
 	return nil
 }
+
+func (bs *BlogService) DeleteBlog(ctx context.Context, id int) error {
+	err := bs.indexUsecase.Delete(ctx, int32(id))
+	if err != nil {
+		bs.log.Error(err)
+		return err
+	}
+
+	return nil
+}

@@ -87,9 +87,17 @@ func (h *handler) UpdateBlog(c *gin.Context) {
 }
 
 func (h *handler) DeleteBlog(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"test": "this is just a test",
-	})
+	blogID, err := strconv.Atoi(c.Param("id"))
+	if err != nil || blogID < 1 {
+		ReplyJson(c, http.StatusBadRequest, -1, "bad request", nil)
+	}
+
+	err = h.blogService.DeleteBlog(c.Request.Context(), blogID)
+	if err != nil {
+		ReplyJson(c, http.StatusInternalServerError, -1, err.Error(), nil)
+	}
+
+	ReplyJson(c, http.StatusOK, 0, "delete success", nil)
 }
 
 // 绑定并验证
