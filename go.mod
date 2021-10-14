@@ -4,10 +4,11 @@ go 1.17
 
 require (
 	entgo.io/ent v0.9.1
+	github.com/astaxie/beego v1.12.3
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-sql-driver/mysql v1.5.1-0.20200311113236-681ffa848bae
-	github.com/sirupsen/logrus v1.2.0
+	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.7.0
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 )
@@ -29,6 +30,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
 	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect

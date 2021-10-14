@@ -15,7 +15,7 @@ func RegisterGinServer(srv *http.Server, service *service.BlogService) {
 	handler := &handler{
 		blogService: service,
 	}
-	engine := gin.New()
+	engine := gin.Default()
 	engine.GET("/ping", pingHandler)
 
 	apiv1 := engine.Group("api/v1")
