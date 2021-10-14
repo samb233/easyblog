@@ -1,12 +1,10 @@
 # easyblog
 
-个人总结性质的项目，给自己提供一个场景，来实践所学的一些零散的知识。
-
-以开发日志的方式记录自己的一些思考。
+普通的，并不是很好用的博客项目
 
 如果你正在寻找一个好用的博客网站，我推荐使用[Hugo](https://github.com/gohugoio/hugo)。
 
-另外[ArkInfra]()也在开坑了！
+另外[ArkInfra](https://github.com/samb233/ArkInfra)也在开坑了！
 
 ## 计划
 
