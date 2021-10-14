@@ -35,8 +35,20 @@ func (bs *BlogService) ListBlog(ctx context.Context, page int) ([]*Blog, error) 
 			UpdatedAt: p.UpdatedAt.Unix(),
 		})
 	}
-
 	return blogs, nil
+}
+
+// 获取某一篇博客
+func (bs *BlogService) GetBlog(ctx context.Context, id int) (*Blog, error) {
+	content, err := bs.contentUsecase.Get(ctx, int32(id))
+	if err != nil {
+		bs.log.Error(err.Error())
+		return nil, err
+	}
+
+	return &Blog{
+		Content: content.Content,
+	}, nil
 }
 
 // 创建博客
@@ -59,6 +71,32 @@ func (bs *BlogService) CreateBlog(ctx context.Context, blog *Blog) error {
 		Attr:      blog.Attr,
 	}
 	if err := bs.indexUsecase.Create(ctx, index); err != nil {
+		bs.log.Error(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+// 更新博客
+func (bs *BlogService) UpdateBlog(ctx context.Context, id int, blog *Blog) error {
+	index := &domain.Index{
+		Title: blog.Title,
+		Desc:  blog.Desc,
+		Attr:  blog.Attr,
+	}
+	contentID, err := bs.indexUsecase.Update(ctx, int32(id), index)
+	if err != nil {
+		bs.log.Error(err.Error())
+		return err
+	}
+
+	content := &domain.Content{
+		Content: blog.Content,
+	}
+
+	err = bs.contentUsecase.Update(ctx, contentID, content)
+	if err != nil {
 		bs.log.Error(err.Error())
 		return err
 	}

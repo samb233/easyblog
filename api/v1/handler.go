@@ -30,10 +30,20 @@ func (h *handler) ListBlog(c *gin.Context) {
 	ReplyJson(c, http.StatusOK, 0, "", indexes)
 }
 
+// 获取博客内容
 func (h *handler) GetBlog(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"test": "this is just a test",
-	})
+	blogID, err := strconv.Atoi(c.Param("id"))
+	if err != nil || blogID < 1 {
+		ReplyJson(c, http.StatusBadRequest, -1, "bad request", nil)
+	}
+
+	blog, err := h.blogService.GetBlog(c.Request.Context(), blogID)
+	if err != nil {
+		ReplyJson(c, http.StatusInternalServerError, -1, err.Error(), nil)
+	}
+
+	ReplyJson(c, http.StatusOK, 0, "", blog)
+
 }
 
 // 新建博客
@@ -54,10 +64,26 @@ func (h *handler) CreateBlog(c *gin.Context) {
 	})
 }
 
+// 更新博客
 func (h *handler) UpdateBlog(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"test": "this is just a test",
-	})
+	blogID, err := strconv.Atoi(c.Param("id"))
+	if err != nil || blogID < 1 {
+		ReplyJson(c, http.StatusBadRequest, -1, "bad request", nil)
+	}
+
+	blog := &service.Blog{}
+	err = BindAndValid(c, blog)
+	if err != nil {
+		ReplyJson(c, http.StatusBadRequest, -1, err.Error(), nil)
+	}
+
+	err = h.blogService.UpdateBlog(c.Request.Context(), blogID, blog)
+	if err != nil {
+		ReplyJson(c, http.StatusInternalServerError, -1, err.Error(), nil)
+	}
+
+	ReplyJson(c, http.StatusOK, 0, "update success", nil)
+
 }
 
 func (h *handler) DeleteBlog(c *gin.Context) {

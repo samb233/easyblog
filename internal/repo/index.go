@@ -33,7 +33,7 @@ var _ domain.IndexRepo = (*IndexRepo)(nil)
 func (ir *IndexRepo) ListIndex(ctx context.Context, page, pageSize int) ([]*domain.Index, error) {
 	ps, err := ir.repo.db.Index.
 		Query().
-		Limit(page).
+		Limit(pageSize).
 		Offset(pageSize * (page - 1)).
 		Where(index.State(1)).
 		Order(ent.Desc("id")).
@@ -71,20 +71,20 @@ func (ir *IndexRepo) CreateIndex(ctx context.Context, index *domain.Index) error
 	return err
 }
 
-func (ir *IndexRepo) UpdateIndex(ctx context.Context, id int32, index *domain.Index) error {
+func (ir *IndexRepo) UpdateIndex(ctx context.Context, id int32, index *domain.Index) (int32, error) {
 	p, err := ir.repo.db.Index.Get(ctx, id)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	_, err = p.Update().
+	updated, err := p.Update().
 		SetTitle(index.Title).
 		SetDesc(index.Desc).
 		SetAttr(index.Attr).
 		SetView(index.View).
 		SetUpdatedAt(time.Now()).
 		Save(ctx)
-	return err
+	return updated.ContentID, err
 }
 
 func (ir *IndexRepo) DeleteIndex(ctx context.Context, id int32) error {

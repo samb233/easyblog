@@ -25,7 +25,7 @@ type IndexRepo interface {
 	// db
 	ListIndex(ctx context.Context, page, pageSize int) ([]*Index, error)
 	CreateIndex(ctx context.Context, index *Index) error
-	UpdateIndex(ctx context.Context, id int32, index *Index) error
+	UpdateIndex(ctx context.Context, id int32, index *Index) (int32, error)
 	DeleteIndex(ctx context.Context, id int32) error
 
 	// TODO: redis
@@ -35,6 +35,6 @@ type IndexRepo interface {
 type IndexUsecase interface {
 	List(ctx context.Context, page, pageSize int) ([]*Index, error)
 	Create(ctx context.Context, index *Index) error
-	Update(ctx context.Context, id int32, index *Index) error
+	Update(ctx context.Context, id int32, index *Index) (int32, error)
 	Delete(ctx context.Context, id int32) error
 }

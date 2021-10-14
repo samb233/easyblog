@@ -30,7 +30,7 @@ func (uc *IndexUsecase) Create(ctx context.Context, index *domain.Index) error {
 	return uc.repo.CreateIndex(ctx, index)
 }
 
-func (uc *IndexUsecase) Update(ctx context.Context, id int32, index *domain.Index) error {
+func (uc *IndexUsecase) Update(ctx context.Context, id int32, index *domain.Index) (int32, error) {
 	return uc.repo.UpdateIndex(ctx, id, index)
 }
 
